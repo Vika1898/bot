@@ -1,0 +1,30 @@
+import logging
+
+from aiogram import Bot, Dispatcher, executor, types
+
+logging.basicConfig(level=logging.INFO)
+
+# Initialize bot and dispatcher
+bot = Bot(token="API_TOKEN")
+dp = Dispatcher(bot)
+
+
+@dp.message_handler(commands=['start', 'help'])
+async def send_welcome(message: types.Message):
+    """
+    This handler will be called when user sends `/start` or `/help` command
+    """
+    await message.reply("Приветик!\nЯ Дори!\nМогу помочь с поиском фильма!")
+
+
+@dp.message_handler()
+async def echo(message: types.Message):
+    if message.text == "Да, пожалуйста":
+        await message.answer("Выбирайте жанр")
+
+@dp.message_handler(commands="start")
+async def cmd_start(message: types.Message):
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    buttons = ["Комедия", "Фантастика", "Хоррор", "Детектив", "Фэнтези"]
+    keyboard.add(*buttons)
+    await message.answer("Выбирайте жанр", reply_markup=keyboard)
